@@ -1,0 +1,9 @@
+include LICENSE
+include *.py
+include README.md
+include README_ZH.md
+include *.pem
+include readthedocs.yml
+recursive-include docs *
+recursive-include examples *
+recursive-include huawei_push_admin

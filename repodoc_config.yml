@@ -1,0 +1,15 @@
+author_email: briantralah@gmail.com
+author_name: Tralah M Brian
+author_username: TralahM
+console_scripts:
+  - ''
+install_requires:
+  - requests
+language: python
+licence: APACHE
+package_name: huawei_push_admin
+program_description: The Huawei Admin Python SDK enables server-side (backend) Python developers to integrate Huawei into their services and applications.
+program_name: python_huawei_push_admin
+readthedocs: true
+repo_name: python_huawei_push_admin
+version: '1.0.0'
