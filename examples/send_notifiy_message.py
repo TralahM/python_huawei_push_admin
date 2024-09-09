@@ -41,7 +41,8 @@ android_notification = messaging.AndroidNotification(
     title_loc_args=["Girl", "Cat"],
     channel_id="Your Channel ID",
     notify_summary="some summary",
-    multi_lang_key={"title_key": {"en": "value1"}, "body_key": {"en": "value2"}},
+    multi_lang_key={"title_key": {"en": "value1"},
+                    "body_key": {"en": "value2"}},
     style=0,
     big_title="Big Boom Title",
     big_body="Big Boom Body",
@@ -50,7 +51,12 @@ android_notification = messaging.AndroidNotification(
     group="Group1",
     importance=messaging.AndroidNotification.PRIORITY_HIGH,
     light_settings=messaging.AndroidLightSettings(
-        color=messaging.AndroidLightSettingsColor(alpha=0, red=0, green=1, blue=1),
+        color=messaging.AndroidLightSettingsColor(
+            alpha=0,
+            red=0,
+            green=1,
+            blue=1,
+        ),
         light_on_duration="3.5",
         light_off_duration="5S",
     ),

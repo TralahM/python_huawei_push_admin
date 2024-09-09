@@ -15,41 +15,47 @@
 # limitations under the License.
 
 import json
-from src.push_admin import _messages
+from . import _messages
 import six
 
 
 class MessageSerializer(json.JSONEncoder):
-    """
-    Use https://docs.python.org/3/library/json.html to do serialization
+    """Use https://docs.python.org/3/library/json.html to do serialization/
 
     The serializer should serialize the following messages:
-    _messages.Message
-    _messages.Notification
-    _messages.ApnsConfig
-    _messages.WebPushConfig
-    _messages.WebPushNotification
-    _messages.WebPushNotificationAction
-    _messages.WebPushHMSOptions
-    _messages.AndroidConfig
-    _messages.AndroidNotification
-    _messages.AndroidClickAction
-    _messages.BadgeNotification
+    * _messages.Message
+    * _messages.Notification
+    * _messages.ApnsConfig
+    * _messages.WebPushConfig
+    * _messages.WebPushNotification
+    * _messages.WebPushNotificationAction
+    * _messages.WebPushHMSOptions
+    * _messages.AndroidConfig
+    * _messages.AndroidNotification
+    * _messages.AndroidClickAction
+    * _messages.BadgeNotification
     """
+
     def default(self, message):
         """
-        :param message: The push message
+        :param message: The push message `_messages.Message`
         :return: formatted push messages
         """
         result = {
-            'data': message.data,
-            'notification': MessageSerializer.encode_notification(message.notification),
-            'android': MessageSerializer.encode_android_config(message.android),
-            'apns': MessageSerializer.encode_apns_config(message.apns),
-            'webpush': MessageSerializer.encode_webpush_config(message.web_push),
-            'token': message.token,
-            'topic': message.topic,
-            'condition': message.condition
+            "data": message.data,
+            "notification": MessageSerializer.encode_notification(
+                message.notification,
+            ),
+            "android": MessageSerializer.encode_android_config(
+                message.android,
+            ),
+            "apns": MessageSerializer.encode_apns_config(message.apns),
+            "webpush": MessageSerializer.encode_webpush_config(
+                message.web_push,
+            ),
+            "token": message.token,
+            "topic": message.topic,
+            "condition": message.condition,
         }
         result = MessageSerializer.remove_null_values(result)
         return result
@@ -61,64 +67,84 @@ class MessageSerializer(json.JSONEncoder):
     @classmethod
     def encode_notification(cls, notification):
         """
-            An example:
+        :param notification:
+        :return:
+
+        An example:
+
+        .. code-block:: json
+
            {
               "title":"Big News",
               "body":"This is a Big News!",
               "image":"https://res.vmallres.com/pimages//common/config/logo/SXppnESYv4K11DBxDFc2_0.png"
             }
-        :param notification:
-        :return:
+
         """
         if notification is None:
             return None
 
         if not isinstance(notification, _messages.Notification):
-            raise ValueError('Message.notification must be an instance of Notification class.')
+            raise ValueError(
+                "Message.notification must be an instance of Notification class."
+            )
 
         result = {
-            'title': notification.title,
-            'body': notification.body,
-            'image': notification.image
+            "title": notification.title,
+            "body": notification.body,
+            "image": notification.image,
         }
         return cls.remove_null_values(result)
 
     @classmethod
     def encode_android_config(cls, android_config):
         """
-        An example:
-        {
-          "android":{
-            "collapse_key":-1,
-            "urgency":"HIGH",
-            "ttl":"1448s",
-            "bi_tag":"Trump",
-            "fast_app_target":1,
-            "notification": {}
-        }
         :param android_config:
         :return:
+
+        An example:
+
+        .. code-block:: json
+
+            {
+              "android":{
+                "collapse_key":-1,
+                "urgency":"HIGH",
+                "ttl":"1448s",
+                "bi_tag":"Trump",
+                "fast_app_target":1,
+                "notification": {}
+            }
         """
         if android_config is None:
             return None
 
         if not isinstance(android_config, _messages.AndroidConfig):
-            raise ValueError('Message.android must be an instance of AndroidConfig class.')
+            raise ValueError(
+                "Message.android must be an instance of AndroidConfig class."
+            )
 
         result = {
-            'collapse_key': android_config.collapse_key,
-            'urgency': android_config.urgency,
-            'ttl': android_config.ttl,
-            'bi_tag': android_config.bi_tag,
-            'fast_app_target': android_config.fast_app_target,
-            'data': android_config.data,
-            'notification': MessageSerializer.encode_android_notification(android_config.notification)
+            "collapse_key": android_config.collapse_key,
+            "urgency": android_config.urgency,
+            "ttl": android_config.ttl,
+            "bi_tag": android_config.bi_tag,
+            "fast_app_target": android_config.fast_app_target,
+            "data": android_config.data,
+            "notification": MessageSerializer.encode_android_notification(
+                android_config.notification
+            ),
         }
         return cls.remove_null_values(result)
 
     @classmethod
     def encode_android_notification(cls, notification):
         """
+        :param notification:
+        :return:
+
+        .. code-block:: json
+
            "notification":{
                 "title":"Noti in Noti title",
                 "body":"Noti in Noti body",
@@ -172,14 +198,14 @@ class MessageSerializer(json.JSONEncoder):
                 },
                 "foreground_show":true
               }
-        :param notification:
-        :return:
         """
         if notification is None:
             return None
 
         if not isinstance(notification, _messages.AndroidNotification):
-            raise ValueError('Message.AndroidConfig.notification must be an instance of AndroidNotification class.')
+            raise ValueError(
+                "Message.AndroidConfig.notification must be an instance of AndroidNotification class."
+            )
 
         result = {
             "title": notification.title,
@@ -191,7 +217,9 @@ class MessageSerializer(json.JSONEncoder):
             "tag": notification.tag,
             "importance": notification.importance,
             "multi_lang_key": notification.multi_lang_key,
-            "click_action": MessageSerializer.encode_android_click_action(notification.click_action),
+            "click_action": MessageSerializer.encode_android_click_action(
+                notification.click_action
+            ),
             "body_loc_key": notification.body_loc_key,
             "body_loc_args": notification.body_loc_args,
             "title_loc_key": notification.title_loc_key,
@@ -212,8 +240,10 @@ class MessageSerializer(json.JSONEncoder):
             "use_default_light": notification.use_default_light,
             "visibility": notification.visibility,
             "vibrate_config": notification.vibrate_config,
-            "light_settings": MessageSerializer.encode_android_light_settings(notification.light_settings),
-            "foreground_show": notification.foreground_show
+            "light_settings": MessageSerializer.encode_android_light_settings(
+                notification.light_settings
+            ),
+            "foreground_show": notification.foreground_show,
         }
         result = cls.remove_null_values(result)
         return result
@@ -221,6 +251,11 @@ class MessageSerializer(json.JSONEncoder):
     @classmethod
     def encode_android_click_action(cls, click_action):
         """
+        :param click_action: _messages.AndroidClickAction
+        :return:
+
+        .. code-block:: json
+
             "click_action":{
                     "type":2,
                     "url":"https://www.huawei.com"
@@ -232,50 +267,54 @@ class MessageSerializer(json.JSONEncoder):
                     "action":""
              }
 
-        :param click_action: _messages.AndroidClickAction
-        :return:
         """
         if click_action is None:
             return None
 
         if not isinstance(click_action, _messages.AndroidClickAction):
-            raise ValueError('Message.AndroidConfig.AndroidNotification.click_action must be an instance\
-                             of AndroidClickAction class.')
+            raise ValueError(
+                "Message.AndroidConfig.AndroidNotification.click_action must be an instance\
+                             of AndroidClickAction class."
+            )
 
         result = {
             "type": click_action.action_type,
             "intent": click_action.intent,
             "url": click_action.url,
-            "action": click_action.action
+            "action": click_action.action,
         }
         result = cls.remove_null_values(result)
         return result
 
     @classmethod
     def encode_android_badge(cls, badge):
-        """
-        refer to: _messages.AndroidBadgeNotification
-
-        "badge":{
-                    "add_num":99,
-                    "set_num":99,
-                    "class":"Classic"
-                }
+        """Refer to: _messages.AndroidBadgeNotification.
 
         :param badge:
         :return:
+
+        .. code-block:: json
+
+            "badge":{
+                        "add_num":99,
+                        "set_num":99,
+                        "class":"Classic"
+                    }
+
         """
         if badge is None:
             return None
 
         if not isinstance(badge, _messages.AndroidBadgeNotification):
-            raise ValueError('Message.AndroidConfig.AndroidNotification.badge must be an instance\
-                             of AndroidBadgeNotification class.')
+            raise ValueError(
+                "Message.AndroidConfig.AndroidNotification.badge must be an instance\
+                             of AndroidBadgeNotification class."
+            )
 
         result = {
             "add_num": badge.add_num,
             "set_num": badge.set_num,
-            "class": badge.clazz
+            "class": badge.clazz,
         }
         result = cls.remove_null_values(result)
         return result
@@ -285,31 +324,38 @@ class MessageSerializer(json.JSONEncoder):
         """
         refer to: _messages.AndroidLightSettings
 
-        "light_settings":{
-                "color":{
-                        "alpha":0,
-                        "red":0,
-                        "green":1,
-                        "blue":1
-                },
-                "light_on_duration":"3.5",
-                "light_off_duration":"5S"
-         }
-
         :param android_light_settings:  _messages.AndroidLightSettings
         :return:
+
+        .. code-block:: json
+
+            "light_settings":{
+                    "color":{
+                            "alpha":0,
+                            "red":0,
+                            "green":1,
+                            "blue":1
+                    },
+                    "light_on_duration":"3.5",
+                    "light_off_duration":"5S"
+             }
+
         """
         if android_light_settings is None:
             return None
 
         if not isinstance(android_light_settings, _messages.AndroidLightSettings):
-            raise ValueError('Message.AndroidConfig.AndroidNotification.android_light_settings must be an instance\
-                             of AndroidLightSettings class.')
+            raise ValueError(
+                "Message.AndroidConfig.AndroidNotification.android_light_settings must be an instance\
+                             of AndroidLightSettings class."
+            )
 
         result = {
-            "color": MessageSerializer.encode_android_light_settings_color(android_light_settings.color),
+            "color": MessageSerializer.encode_android_light_settings_color(
+                android_light_settings.color
+            ),
             "light_on_duration": android_light_settings.light_on_duration,
-            "light_off_duration": android_light_settings.light_off_duration
+            "light_off_duration": android_light_settings.light_off_duration,
         }
         result = cls.remove_null_values(result)
         return result
@@ -317,27 +363,31 @@ class MessageSerializer(json.JSONEncoder):
     @classmethod
     def encode_android_light_settings_color(cls, color):
         """
-        "color":{
-                        "alpha":0,
-                        "red":0,
-                        "green":1,
-                        "blue":1
-        }
-
         :param color: _messages.AndroidLightSettingsColor
         :return:
+
+        .. code-block:: json
+
+            "color":{
+                            "alpha":0,
+                            "red":0,
+                            "green":1,
+                            "blue":1
+            }
         """
         if color is None:
             return None
 
         if not isinstance(color, _messages.AndroidLightSettingsColor):
-            raise ValueError('Message.AndroidConfig.AndroidNotification.android_light_settings.color must be an instance\
-                             of AndroidLightSettingsColor class.')
+            raise ValueError(
+                "Message.AndroidConfig.AndroidNotification.android_light_settings.color must be an instance\
+                             of AndroidLightSettingsColor class."
+            )
         result = {
             "alpha": color.alpha,
             "red": color.red,
             "green": color.green,
-            "blue": color.blue
+            "blue": color.blue,
         }
         result = cls.remove_null_values(result)
         return result
@@ -345,30 +395,42 @@ class MessageSerializer(json.JSONEncoder):
     @classmethod
     def encode_webpush_config(cls, webpush_config):
         """
-        "webpush":{
-            "headers":{
-                ...
-            },
-            "notification":{
-                ...
-            },
-            "hms_options":{
-                ...
-            }
-         }
         :param webpush_config: refer to _messages.WebPushConfig
         :return:
+
+        .. code-block:: json
+
+            "webpush":{
+                "headers":{
+                    ...
+                },
+                "notification":{
+                    ...
+                },
+                "hms_options":{
+                    ...
+                }
+             }
+
         """
         if webpush_config is None:
             return None
 
         if not isinstance(webpush_config, _messages.WebPushConfig):
-            raise ValueError('Message.webpush must be an instance of WebPushConfig class.')
+            raise ValueError(
+                "Message.webpush must be an instance of WebPushConfig class."
+            )
 
         result = {
-            "headers": MessageSerializer.encode_webpush_config_headers(webpush_config.headers),
-            "notification": MessageSerializer.encode_webpush_config_notification(webpush_config.notification),
-            "hms_options": MessageSerializer.encode_webpush_config_hms_options(webpush_config.hms_options),
+            "headers": MessageSerializer.encode_webpush_config_headers(
+                webpush_config.headers
+            ),
+            "notification": MessageSerializer.encode_webpush_config_notification(
+                webpush_config.notification
+            ),
+            "hms_options": MessageSerializer.encode_webpush_config_hms_options(
+                webpush_config.hms_options
+            ),
         }
         result = cls.remove_null_values(result)
         return result
@@ -376,20 +438,25 @@ class MessageSerializer(json.JSONEncoder):
     @classmethod
     def encode_webpush_config_headers(cls, webpush_headers):
         """
-        "headers":{
-                "ttl":"990",
-                "urgency":"very-low",
-                "topic":"12313ceshi"
-            }
-
         :param webpush_headers: _messages.WebPushHeader
         :return:
+
+        .. code-block:: json
+
+            "headers":{
+                    "ttl":"990",
+                    "urgency":"very-low",
+                    "topic":"12313ceshi"
+                }
+
         """
         if webpush_headers is None:
             return None
 
         if not isinstance(webpush_headers, _messages.WebPushHeader):
-            raise ValueError('Message.webpush.headers must be an instance of WebPushHeader class.')
+            raise ValueError(
+                "Message.webpush.headers must be an instance of WebPushHeader class."
+            )
 
         result = {
             "ttl": webpush_headers.ttl,
@@ -402,43 +469,51 @@ class MessageSerializer(json.JSONEncoder):
     @classmethod
     def encode_webpush_config_notification(cls, webpush_notification):
         """
-        "notification":{
-                "title":"notication string",
-                "body":"web push body",
-                "actions":[
-                    {
-                        "action":"",
-                        "icon":"https://res.vmallres.com/pimages//common/config/logo/SXppnESYv4K11DBxDFc2.png",
-                        "title":"string"
-                    }
-                ],
-                "badge":"string",
-                "dir":"auto",
-                "icon":"https://res.vmallres.com/pimages//common/config/logo/SXppnESYv4K11DBxDFc2.png",
-                "image":"string",
-                "lang":"string",
-                "renotify":true,
-                "requireInteraction":true,
-                "silent":true,
-                "tag":"string",
-                "timestamp":1545201266,
-                "vibrate":[1,2,3]
-            }
-
         :param webpush_notification: refer to _messages.WebPushNotification
         :return:
+
+        .. code-block:: json
+
+            "notification":{
+                    "title":"notication string",
+                    "body":"web push body",
+                    "actions":[
+                        {
+                            "action":"",
+                            "icon":"https://res.vmallres.com/pimages//common/config/logo/SXppnESYv4K11DBxDFc2.png",
+                            "title":"string"
+                        }
+                    ],
+                    "badge":"string",
+                    "dir":"auto",
+                    "icon":"https://res.vmallres.com/pimages//common/config/logo/SXppnESYv4K11DBxDFc2.png",
+                    "image":"string",
+                    "lang":"string",
+                    "renotify":true,
+                    "requireInteraction":true,
+                    "silent":true,
+                    "tag":"string",
+                    "timestamp":1545201266,
+                    "vibrate":[1,2,3]
+                }
+
         """
         if webpush_notification is None:
             return None
 
         if not isinstance(webpush_notification, _messages.WebPushNotification):
-            raise ValueError('Message.webpush.notification must be an instance of WebPushNotification class.')
+            raise ValueError(
+                "Message.webpush.notification must be an instance"
+                " of WebPushNotification class."
+            )
 
         result = {
             "title": webpush_notification.title,
             "body": webpush_notification.body,
-            "actions": [MessageSerializer.encode_webpush_notification_action(_)
-                        for _ in webpush_notification.actions],
+            "actions": [
+                MessageSerializer.encode_webpush_notification_action(_)
+                for _ in webpush_notification.actions
+            ],
             "badge": webpush_notification.badge,
             "dir": webpush_notification.dir,
             "icon": webpush_notification.icon,
@@ -449,7 +524,7 @@ class MessageSerializer(json.JSONEncoder):
             "silent": webpush_notification.silent,
             "tag": webpush_notification.tag,
             "timestamp": webpush_notification.timestamp,
-            "vibrate": webpush_notification.vibrate
+            "vibrate": webpush_notification.vibrate,
         }
         result = cls.remove_null_values(result)
         return result
@@ -457,27 +532,35 @@ class MessageSerializer(json.JSONEncoder):
     @classmethod
     def encode_webpush_notification_action(cls, webpush_notification_action):
         """
-        "actions":[
-                    {
-                        "action":"",
-                        "icon":"https://res.vmallres.com/pimages//common/config/logo/SXppnESYv4K11DBxDFc2.png",
-                        "title":"string"
-                    }
-                ],
         :param webpush_notification_action: refer to _messages.WebPushNotificationAction
         :return:
+
+        .. code-block:: json
+
+            "actions":[
+                        {
+                            "action":"",
+                            "icon":"https://res.vmallres.com/pimages//common/config/logo/SXppnESYv4K11DBxDFc2.png",
+                            "title":"string"
+                        }
+                    ],
+
         """
         if webpush_notification_action is None:
             return None
 
-        if not isinstance(webpush_notification_action, _messages.WebPushNotificationAction):
-            raise ValueError('Message.webpush.notification.action must be an instance of \
-                            WebPushNotificationAction class.')
+        if not isinstance(
+            webpush_notification_action, _messages.WebPushNotificationAction
+        ):
+            raise ValueError(
+                "Message.webpush.notification.action must be an instance of \
+                            WebPushNotificationAction class."
+            )
 
         result = {
             "action": webpush_notification_action.action,
             "icon": webpush_notification_action.icon,
-            "title": webpush_notification_action.title
+            "title": webpush_notification_action.title,
         }
         result = cls.remove_null_values(result)
         return result
@@ -485,42 +568,50 @@ class MessageSerializer(json.JSONEncoder):
     @classmethod
     def encode_webpush_config_hms_options(cls, webpush_hms_options):
         """
-        "hms_options":{
-                "link":"https://www.huawei.com/"
-         }
-
         :param webpush_hms_options: refer to _messages.WebPushHMSOptions
         :return:
+
+        .. code-block:: json
+
+            "hms_options":{
+                    "link":"https://www.huawei.com/"
+             }
+
         """
         if webpush_hms_options is None:
             return None
 
         if not isinstance(webpush_hms_options, _messages.WebPushHMSOptions):
-            raise ValueError('Message.webpush.hmsoptions must be an instance of \
-                            WebPushHMSOptions class.')
+            raise ValueError(
+                "Message.webpush.hmsoptions must be an instance of \
+                            WebPushHMSOptions class."
+            )
 
-        result = {
-            "link": webpush_hms_options.link
-        }
+        result = {"link": webpush_hms_options.link}
         result = cls.remove_null_values(result)
         return result
 
     @classmethod
     def encode_apns_config(cls, apns_config):
-        """
-        Encode APNs config into JSON
+        """Encode APNs config into JSON.
+
         :param apns_config:
         :return:
         """
         if apns_config is None:
             return None
         if not isinstance(apns_config, _messages.APNsConfig):
-            raise ValueError('Message.apns_config must be an instance of _messages.APNsConfig class.')
+            raise ValueError(
+                "Message.apns_config must be an instance of"
+                " _messages.APNsConfig class."
+            )
 
         result = {
-            'headers': apns_config.headers,
-            'payload': cls.encode_apns_payload(apns_config.payload),
-            'hms_options': cls.encode_apns_hms_options(apns_config.apns_hms_options)
+            "headers": apns_config.headers,
+            "payload": cls.encode_apns_payload(apns_config.payload),
+            "hms_options": cls.encode_apns_hms_options(
+                apns_config.apns_hms_options,
+            ),
         }
         return cls.remove_null_values(result)
 
@@ -530,10 +621,11 @@ class MessageSerializer(json.JSONEncoder):
         if apns_payload is None:
             return None
         if not isinstance(apns_payload, _messages.APNsPayload):
-            raise ValueError('APNSConfig.payload must be an instance of _messages.APNsPayload class.')
-        result = {
-            'aps': cls.encode_apns_payload_aps(apns_payload.aps)
-        }
+            raise ValueError(
+                "APNSConfig.payload must be an instance of"
+                " _messages.APNsPayload class."
+            )
+        result = {"aps": cls.encode_apns_payload_aps(apns_payload.aps)}
         for key, value in apns_payload.custom_data.items():
             result[key] = value
         return cls.remove_null_values(result)
@@ -542,26 +634,30 @@ class MessageSerializer(json.JSONEncoder):
     def encode_apns_payload_aps(cls, apns_payload_aps):
         """Encodes an ``Aps`` instance into JSON."""
         if not isinstance(apns_payload_aps, _messages.APNsAps):
-            raise ValueError('APNSPayload.aps must be an instance of _messages.APNsAps class.')
+            raise ValueError(
+                "APNSPayload.aps must be an instance of" " _messages.APNsAps class."
+            )
 
         result = {
-            'alert': cls.encode_apns_payload_alert(apns_payload_aps.alert),
-            'badge': apns_payload_aps.badge,
-            'sound': apns_payload_aps.sound,
-            'category': apns_payload_aps.category,
-            'thread-id': apns_payload_aps.thread_id
+            "alert": cls.encode_apns_payload_alert(apns_payload_aps.alert),
+            "badge": apns_payload_aps.badge,
+            "sound": apns_payload_aps.sound,
+            "category": apns_payload_aps.category,
+            "thread-id": apns_payload_aps.thread_id,
         }
 
         if apns_payload_aps.content_available is True:
-            result['content-available'] = 1
+            result["content-available"] = 1
         if apns_payload_aps.mutable_content is True:
-            result['mutable-content'] = 1
+            result["mutable-content"] = 1
         if apns_payload_aps.custom_data is not None:
             if not isinstance(apns_payload_aps.custom_data, dict):
-                raise ValueError('Aps.custom_data must be a dict.')
+                raise ValueError("Aps.custom_data must be a dict.")
             for key, val in apns_payload_aps.custom_data.items():
                 if key in result:
-                    raise ValueError('Multiple specifications for {0} in Aps.'.format(key))
+                    raise ValueError(
+                        "Multiple specifications for {0} in Aps.".format(key)
+                    )
                 result[key] = val
         return cls.remove_null_values(result)
 
@@ -573,26 +669,30 @@ class MessageSerializer(json.JSONEncoder):
         if isinstance(apns_payload_alert, six.string_types):
             return apns_payload_alert
         if not isinstance(apns_payload_alert, _messages.APNsAlert):
-            raise ValueError('Aps.alert must be a string or an instance of _messages.APNsAlert class.')
+            raise ValueError(
+                "Aps.alert must be a string or an instance"
+                " of _messages.APNsAlert class."
+            )
         result = {
-            'title': apns_payload_alert.title,
-            'body': apns_payload_alert.body,
-            'title-loc-key': apns_payload_alert.title_loc_key,
-            'title-loc-args': apns_payload_alert.title_loc_args,
-            'loc-key': apns_payload_alert.loc_key,
-            'loc-args': apns_payload_alert.loc_args,
-            'action-loc-key': apns_payload_alert.action_loc_key,
-            'launch-image': apns_payload_alert.launch_image
+            "title": apns_payload_alert.title,
+            "body": apns_payload_alert.body,
+            "title-loc-key": apns_payload_alert.title_loc_key,
+            "title-loc-args": apns_payload_alert.title_loc_args,
+            "loc-key": apns_payload_alert.loc_key,
+            "loc-args": apns_payload_alert.loc_args,
+            "action-loc-key": apns_payload_alert.action_loc_key,
+            "launch-image": apns_payload_alert.launch_image,
         }
-        if result.get('loc-args') and not result.get('loc-key'):
+        if result.get("loc-args") and not result.get("loc-key"):
             raise ValueError(
-                'ApsAlert.loc_key is required when specifying loc_args.')
-        if result.get('title-loc-args') and not result.get('title-loc-key'):
+                "ApsAlert.loc_key is required when specifying loc_args.")
+        if result.get("title-loc-args") and not result.get("title-loc-key"):
             raise ValueError(
-                'ApsAlert.title_loc_key is required when specifying title_loc_args.')
+                "ApsAlert.title_loc_key is required when" " specifying title_loc_args."
+            )
         if apns_payload_alert.custom_data is not None:
             if not isinstance(apns_payload_alert.custom_data, dict):
-                raise ValueError('ApsAlert.custom_data must be a dict.')
+                raise ValueError("ApsAlert.custom_data must be a dict.")
             for key, val in apns_payload_alert.custom_data.items():
                 result[key] = val
         return cls.remove_null_values(result)
@@ -605,9 +705,12 @@ class MessageSerializer(json.JSONEncoder):
         if apns_hms_options is None:
             return None
         if not isinstance(apns_hms_options, _messages.APNsHMSOptions):
-            raise ValueError('Aps.alert must be a string or an instance of _messages.APNsHMSOptions class.')
+            raise ValueError(
+                "Aps.alert must be a string or an instance of"
+                " _messages.APNsHMSOptions class."
+            )
 
         result = {
-            'target_user_type': apns_hms_options.target_user_type,
+            "target_user_type": apns_hms_options.target_user_type,
         }
         return cls.remove_null_values(result)

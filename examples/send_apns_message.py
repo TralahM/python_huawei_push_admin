@@ -19,7 +19,9 @@ import json
 from push_admin import messaging
 
 
-headers = {messaging.APNsHeader.HEAD_APNs_ID: "6532dc0e-f581-7bfb-e1ab-60ec3cecea73"}
+headers = {
+    messaging.APNsHeader.HEAD_APNs_ID: "6532dc0e-f581-7bfb-e1ab-60ec3cecea73",
+}
 
 apns_alert = messaging.APNsAlert(
     title="HMS Push Title",
@@ -46,13 +48,15 @@ payload = messaging.APNsPayload(
 apns_hms_options = messaging.APNsHMSOptions(target_user_type=1)
 
 apns_push_config = messaging.APNsConfig(
-    headers=headers, payload=payload, apns_hms_options=apns_hms_options
+    headers=headers,
+    payload=payload,
+    apns_hms_options=apns_hms_options,
 )
 
 
 def send_apns_push_message():
-    """
-    a sample to show hwo to send web push message
+    """A sample to show how to send web push message.
+
     :return:
     """
     message = messaging.Message(
@@ -76,7 +80,10 @@ def send_apns_push_message():
 
 
 def init_app():
-    """init sdk app. The appID & app Secret use the Android's application ID and Secret under the same project, next version you can use
+    """Init sdk app.
+
+    The appID & app Secret use the Android's application ID
+    and Secret under the same project, next version you can use
     the IOS application's own appId & secret!"""
     # TODO：
     app_id_at = "Your android application's app id"

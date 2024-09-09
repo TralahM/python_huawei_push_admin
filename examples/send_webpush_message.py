@@ -31,7 +31,7 @@ web_push_notification = messaging.WebPushNotification(
             title="title",
             icon="https://developer-portalres-drcn.\
                 dbankcdn.com/system/modules/org.opencms.portal.template.core/resources/images/icon_Promotion.png",
-        )
+        ),
     ],
     badge="badge",
     data="data",
@@ -47,7 +47,8 @@ web_push_notification = messaging.WebPushNotification(
 )
 
 web_push_config = messaging.WebPushConfig(
-    headers=web_push_headers, notification=web_push_notification
+    headers=web_push_headers,
+    notification=web_push_notification,
 )
 
 
@@ -78,7 +79,8 @@ def send_push_android_data_message():
 
 def init_app():
     """init sdk app
-    The appID & app Secret use the Android's application ID and Secret under the same project, next version you can use
+    The appID & app Secret use the Android's application ID
+    and Secret under the same project, next version you can use
     the web application's own appId & secret!
     """
     # TODO
