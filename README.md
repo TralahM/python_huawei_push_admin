@@ -10,8 +10,11 @@ English | [中文](https://gitee.com/hms-core/hms-push-serverdemo-python/blob/ma
  * [Sample Code](#sample-code)
  * [Libraries](#Libraries)
  * [License](#license)
- 
- 
+
+
+## Documentation
+Head over to [RTFD](https://huawei-push-admin.readthedocs.io/) for documentation.
+
 ## Introduction
 
 Python sample code encapsulates APIs of the HUAWEI Push Kit server. It provides many sample programs about quick access to HUAWEI Push Kit for your reference or usage.
@@ -22,7 +25,7 @@ The following table describes packages of Python sample code.
 | ----------   |    ------------|
 | examples     |    Sample code packages. Each package can run independently.|
 | push_admin   |    Package where APIs of the HUAWEI Push Kit server are encapsulated.|
-	
+
 ## Installation
 
 To install pushkit-python-sample, you should extract the compressed ZIP file, execute the following command in the unzipped directory:
@@ -34,7 +37,7 @@ python setup.py install
 For pushkit-python-sample, We currently support Python 2.7/3.7 and JetBrains PyCharm are recommended.
 
 
-## Configuration 
+## Configuration
 The following table describes parameters of the initialize_app method.
 
 | Parameter      |    Description |
@@ -47,7 +50,7 @@ The following table describes parameters of the initialize_app method.
 
 ## Sample Code
 
-Python sample code uses the Messaging structure in the push_admin package as the entry. Each method in the Messaging 
+Python sample code uses the Messaging structure in the push_admin package as the entry. Each method in the Messaging
 structure calls an API of the HUAWEI Push Kit server.
 
 The following table describes methods in the Messaging structure.
